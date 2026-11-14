@@ -1,0 +1,141 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>SiteLevel – Digital Spirit Level for Dumpy Level Readings</title>
+<link href="https://fonts.googleapis.com/css2?family=Chakra+Petch:wght@500;600;700&family=Hanken+Grotesk:wght@400;500;600&display=swap" rel="stylesheet">
+<style>
+:root{--bg:#eff2f0;--sf:#fff;--ink:#17201b;--mu:#58665f;--ln:#cdd6d1;--tube:#e3e9e5;--g:#13894a;--o:#f28c00;--r:#d62e2e;--n:#6c7a73;--gi:#fff;--oi:#1a1200;--ri:#fff;--ni:#fff;box-sizing:border-box;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}
+@media (prefers-color-scheme:dark){:root:not([data-theme="light"]){--bg:#0f1512;--sf:#18211c;--ink:#e8efeb;--mu:#98a9a0;--ln:#2f3d36;--tube:#223029;--g:#2fbf73;--gi:#04180d;--r:#ef5a5a;--ri:#1d0505;--n:#8a9992;--ni:#0f1512}}
+:root[data-theme="dark"]{--bg:#0f1512;--sf:#18211c;--ink:#e8efeb;--mu:#98a9a0;--ln:#2f3d36;--tube:#223029;--g:#2fbf73;--gi:#04180d;--r:#ef5a5a;--ri:#1d0505;--n:#8a9992;--ni:#0f1512}
+*{box-sizing:border-box}
+html{scroll-padding-top:env(safe-area-inset-top,0px)}
+body{margin:0;background:var(--bg);color:var(--ink);font:16px/1.5 "Hanken Grotesk",system-ui,-apple-system,"Segoe UI",sans-serif}
+header,main{max-width:980px;margin:auto;padding:0 18px}
+header{padding-top:18px}
+h1{font:700 30px/1.1 "Chakra Petch","Arial Narrow",sans-serif;margin:0}
+header p{margin:4px 0 14px;color:var(--mu)}
+h2{font:600 18px "Chakra Petch",sans-serif;margin:0 0 8px}
+.pn{background:var(--sf);border:1px solid var(--ln);border-radius:8px;padding:16px;margin-bottom:16px}
+.g{display:grid;grid-template-columns:minmax(0,310px) minmax(0,1fr);gap:16px;align-items:start}
+@media(max-width:780px){.g{grid-template-columns:1fr}}
+label{display:block;font-size:13px;color:var(--mu);margin:10px 0 2px}
+input{width:100%;font:500 17px "Chakra Petch",sans-serif;padding:9px 10px;border:1px solid var(--ln);border-radius:6px;background:var(--bg);color:var(--ink)}
+input:focus-visible,button:focus-visible{outline:3px solid var(--ink);outline-offset:2px}
+.row{display:grid;grid-template-columns:1fr 1fr;gap:10px}
+.hi{margin-top:14px;padding:10px 12px;border-left:5px solid var(--ink);background:var(--bg)}
+.hi b{font:600 24px "Chakra Petch",sans-serif}
+.hi span{display:block;font-size:13px;color:var(--mu)}
+#v{--sc:var(--n);--sci:var(--ni)}
+#v[data-s=ok]{--sc:var(--g);--sci:var(--gi)}
+#v[data-s=hi]{--sc:var(--o);--sci:var(--oi)}
+#v[data-s=lo]{--sc:var(--r);--sci:var(--ri)}
+.ban{background:var(--sc);color:var(--sci);border-radius:8px;padding:14px 16px;transition:background .3s}
+.ban b{display:block;font:700 40px/1.1 "Chakra Petch",sans-serif}
+.ban span{font-size:16px}
+svg{width:100%;height:auto;display:block;margin:12px 0 4px}
+#bub{transition:transform .4s cubic-bezier(.3,1.4,.5,1)}
+@media(prefers-reduced-motion:reduce){#bub{transition:none}}
+.rq{font-size:15px;color:var(--mu);margin:6px 0 0}
+.btn{font:600 16px "Chakra Petch",sans-serif;padding:10px 18px;border:0;border-radius:6px;background:var(--ink);color:var(--bg);cursor:pointer}
+.btn.s{background:var(--bg);color:var(--ink);border:1px solid var(--ln)}
+.bar{display:flex;flex-wrap:wrap;gap:8px;margin-top:12px;align-items:center}
+.sc{overflow-x:auto}
+table{width:100%;border-collapse:collapse;font-size:15px}
+th,td{padding:7px 8px;border-bottom:1px solid var(--ln);text-align:right;white-space:nowrap}
+th:first-child,td:first-child{text-align:left}
+th{color:var(--mu);font-weight:600}
+.chip{display:inline-block;padding:2px 10px;border-radius:999px;font-weight:600;font-size:14px;background:var(--c);color:var(--ci)}
+.chip.ok{--c:var(--g);--ci:var(--gi)}.chip.hi{--c:var(--o);--ci:var(--oi)}.chip.lo{--c:var(--r);--ci:var(--ri)}
+.x{border:0;background:none;color:var(--mu);font-size:18px;cursor:pointer}
+.note{font-size:13px;color:var(--mu);margin:8px 0 0}
+.sm{display:flex;gap:8px;flex-wrap:wrap;margin-bottom:10px}
+</style>
+</head>
+<body>
+<header>
+<h1>SiteLevel</h1>
+<p>Enter the benchmark and staff readings from your dumpy level. The vial tells you if the level is good, high or low.</p>
+</header>
+<main>
+<div class="g">
+<div>
+<div class="pn"><h2>Instrument setup</h2>
+<label>Reference point level, RL (m)</label><input id="rl" type="number" step="0.001" value="100.000">
+<label>Backsight reading on reference point (m)</label><input id="bs" type="number" step="0.001" value="1.452">
+<label>Tolerance, plus or minus (mm)</label><input id="tol" type="number" step="1" min="0" value="5">
+<div class="hi"><b id="hi">–</b><span>Height of instrument (HI = RL + backsight)</span></div>
+<p class="note">Moved the instrument? Sight a point of known level and enter its RL and the new backsight above. Logged points keep the HI they were measured with.</p></div>
+<div class="pn"><h2>Point to check</h2>
+<label>Point name</label><input id="nm" type="text" value="P1">
+<label>Target level, RL (m)</label><input id="tg" type="number" step="0.001" value="100.500">
+<label>Staff reading at this point (m)</label><input id="rd" type="number" step="0.001" value="0.950" inputmode="decimal">
+<div class="bar"><button class="btn" id="add">Log point</button></div></div>
+</div>
+<div id="v" data-s="n">
+<div class="pn"><div class="ban" aria-live="polite"><b id="t">Enter a reading</b><span id="u">Fill in the setup and staff reading.</span></div>
+<svg viewBox="0 0 600 130" role="img" aria-label="Spirit level vial. The bubble moves right when the level is high and left when it is low.">
+<rect x="10" y="20" width="580" height="84" rx="42" fill="var(--tube)" stroke="var(--ln)" stroke-width="3"/>
+<rect id="win" x="245" y="24" width="110" height="76" fill="var(--g)" opacity=".25"/>
+<line id="l1" x1="245" y1="24" x2="245" y2="100" stroke="var(--ink)" stroke-width="3"/>
+<line id="l2" x1="355" y1="24" x2="355" y2="100" stroke="var(--ink)" stroke-width="3"/>
+<g stroke="var(--mu)" stroke-width="2"><line x1="80" y1="104" x2="80" y2="114"/><line x1="190" y1="104" x2="190" y2="114"/><line x1="300" y1="104" x2="300" y2="118"/><line x1="410" y1="104" x2="410" y2="114"/><line x1="520" y1="104" x2="520" y2="114"/></g>
+<g id="bub"><ellipse cx="300" cy="62" rx="40" ry="30" fill="var(--sc)" stroke="var(--ink)" stroke-width="3"/><ellipse cx="288" cy="50" rx="12" ry="7" fill="#fff" opacity=".55"/></g>
+<text x="14" y="126" font-size="14" fill="var(--mu)" font-family="Hanken Grotesk,sans-serif">Lower</text>
+<text x="586" y="126" font-size="14" text-anchor="end" fill="var(--mu)" font-family="Hanken Grotesk,sans-serif">Higher</text>
+</svg>
+<p class="rq" id="rq"></p></div>
+</div>
+</div>
+
+<div class="pn"><h2>Logged points</h2>
+<div class="sm" id="sm"></div>
+<div class="sc"><table id="tb"></table></div>
+<div class="bar"><button class="btn s" id="cp">Copy as CSV</button><button class="btn s" id="cl">Clear log</button><span class="note" id="msg"></span></div>
+<textarea id="ta" rows="6" style="display:none;width:100%;margin-top:8px"></textarea>
+</div>
+</main>
+<script>
+const $=id=>document.getElementById(id),nv=id=>parseFloat($(id).value);
+const SYM={ok:'●',hi:'▲',lo:'▼'},LAB={ok:'Level OK',hi:'Higher',lo:'Lower'};
+let log=[];
+try{const s=JSON.parse(localStorage.getItem('sitelevel')||'null');if(s){['rl','bs','tol','tg'].forEach(k=>{if(s[k]!=null)$(k).value=s[k]});log=s.log||[]}}catch(e){}
+const save=()=>{try{localStorage.setItem('sitelevel',JSON.stringify({rl:$('rl').value,bs:$('bs').value,tol:$('tol').value,tg:$('tg').value,log}))}catch(e){}};
+const esc=s=>String(s).replace(/[&<>"]/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]));
+const mm=x=>{const r=Math.round(x*10)/10;return (r>0?'+':'')+r};
+const stat=(d,tol)=>Math.abs(d)<=tol+1e-9?'ok':d>0?'hi':'lo';
+function calc(){
+ const rl=nv('rl'),bs=nv('bs'),tol=Math.max(nv('tol')||0,0),tg=nv('tg'),rd=nv('rd');
+ const HI=rl+bs;$('hi').textContent=isFinite(HI)?HI.toFixed(3)+' m':'–';
+ const v=$('v'),bub=$('bub');
+ if(![HI,tg,rd].every(isFinite)){v.dataset.s='n';$('t').textContent='Enter a reading';$('u').textContent='Fill in the setup and staff reading.';$('rq').textContent='';bub.style.transform='translate(0px,0)';return null}
+ const RL=HI-rd,d=Math.round((RL-tg)*1e6)/1e3,s=stat(d,tol),range=Math.max(4*tol,10);
+ v.dataset.s=s;
+ $('t').textContent=SYM[s]+' '+LAB[s];
+ const a=Math.abs(d);
+ $('u').textContent=s==='ok'?`Measured level ${RL.toFixed(3)} m is within ±${tol} mm of target (${mm(d)} mm).`:s==='hi'?`Measured level ${RL.toFixed(3)} m is ${a} mm above target. Cut or lower by about ${a} mm.`:`Measured level ${RL.toFixed(3)} m is ${a} mm below target. Fill or raise by about ${a} mm.`;
+ const req=HI-tg;$('rq').textContent=`Required staff reading: ${req.toFixed(3)} m (acceptable ${(req-tol/1000).toFixed(3)} to ${(req+tol/1000).toFixed(3)} m).`;
+ const w=Math.min(tol/range,1)*220;
+ ['win'].forEach(i=>{$(i).setAttribute('x',300-w);$(i).setAttribute('width',2*w)});
+ $('l1').setAttribute('x1',300-w);$('l1').setAttribute('x2',300-w);$('l2').setAttribute('x1',300+w);$('l2').setAttribute('x2',300+w);
+ bub.style.transform=`translate(${Math.max(-1,Math.min(1,d/range))*220}px,0)`;
+ return{HI,RL,d,s,tg,rd};
+}
+function render(){
+ const c={ok:0,hi:0,lo:0};log.forEach(r=>c[r.s]++);
+ $('sm').innerHTML=['ok','hi','lo'].map(k=>`<span class="chip ${k}">${SYM[k]} ${LAB[k]}: ${c[k]}</span>`).join('');
+ $('tb').innerHTML=log.length?'<tr><th>Point</th><th>Target</th><th>Reading</th><th>RL</th><th>Diff (mm)</th><th>Result</th><th></th></tr>'+log.map((r,i)=>`<tr><td>${esc(r.n)}</td><td>${r.tg.toFixed(3)}</td><td>${r.rd.toFixed(3)}</td><td>${r.RL.toFixed(3)}</td><td>${mm(r.d)}</td><td><span class="chip ${r.s}">${SYM[r.s]} ${LAB[r.s]}</span></td><td><button class="x" data-i="${i}" aria-label="Delete ${esc(r.n)}">×</button></td></tr>`).join(''):'<tr><td>No points logged yet. Enter a reading and select Log point.</td></tr>';
+}
+function bumpName(n){const m=/^(.*?)(\d+)$/.exec(n);return m?m[1]+(+m[2]+1):n+'2'}
+$('add').onclick=()=>{const r=calc();if(!r)return;log.push({n:$('nm').value||'Point',tg:r.tg,rd:r.rd,RL:r.RL,d:r.d,s:r.s,hi:r.HI});$('nm').value=bumpName($('nm').value||'P0');$('rd').value='';$('rd').focus();save();render();calc()};
+$('rd').addEventListener('keydown',e=>{if(e.key==='Enter')$('add').click()});
+$('tb').onclick=e=>{const b=e.target.closest('.x');if(b){log.splice(+b.dataset.i,1);save();render()}};
+$('cl').onclick=()=>{log=[];save();render()};
+$('cp').onclick=async()=>{const t='Point,Target RL,Staff reading,Measured RL,Diff mm,Result\n'+log.map(r=>[`"${r.n.replace(/"/g,'""')}"`,r.tg.toFixed(3),r.rd.toFixed(3),r.RL.toFixed(3),r.d,LAB[r.s]].join(',')).join('\n');
+ try{await navigator.clipboard.writeText(t);$('msg').textContent='Copied.'}catch(e){$('ta').style.display='block';$('ta').value=t;$('ta').select();$('msg').textContent='Select and copy the text below.'}};
+document.querySelectorAll('input').forEach(i=>i.addEventListener('input',()=>{calc();save()}));
+calc();render();
+</script>
+</body>
+</html>

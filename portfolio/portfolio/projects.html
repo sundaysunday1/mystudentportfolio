@@ -1,0 +1,93 @@
+<!DOCTYPE html>
+<!-- Page: Projects | Part of Sunday Amos Salami's student portfolio -->
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <!-- Makes the layout scale correctly on phones -->
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Projects | Sunday Amos Salami</title>
+  <meta name="description" content="Student portfolio and academic planner of Sunday Amos Salami.">
+  <!-- Google Fonts: speeds up font loading, then loads the two font families -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:wght@500;700&family=Source+Serif+4:wght@400;600&display=swap" rel="stylesheet">
+  <!-- Site-wide stylesheet -->
+  <link rel="stylesheet" href="css/style.css">
+</head>
+<body>
+  <!-- ===== Site header and navigation (same on every page) ===== -->
+  <header>
+    <div class="wrap">
+      <a class="brand" href="index.html">Sunday Amos Salami</a>
+      <!-- Mobile menu toggle; behaviour is in js/script.js -->
+      <button id="menu-btn" aria-label="Toggle menu" aria-expanded="false">Menu</button>
+      <nav aria-label="Main">
+        <ul id="nav-list">
+          <li><a href="index.html">Home</a></li>
+          <li><a href="about.html">About</a></li>
+          <li><a href="projects.html" class="active" aria-current="page">Projects</a></li>
+          <li><a href="planner.html">Planner</a></li>
+          <li><a href="contact.html">Contact</a></li>
+        </ul>
+      </nav>
+    </div>
+  </header>
+
+  <!-- ===== Main page content ===== -->
+  <main>
+    <div class="wrap">
+      <h1>My projects</h1>
+      <p class="lead">These are tools I've built while sharpening my skills in HTML, CSS and JavaScript.</p>
+      <br>
+
+      <!-- Project cards laid out in a responsive grid -->
+      <div class="grid">
+
+        <!-- Project 1 -->
+        <article class="card">
+		
+          <img src="images/SiteLOGIC.jpg" alt="Screenshot of the SiteLOGIC web app project" loading="lazy">
+          <div class="body">
+		  <a href="sitelogic/index.html">
+            <h3>SiteLOGIC</h3>
+			 </a>
+            <p>SiteLogic is an integrated web application designed to streamline construction project planning, site operations, and resource management. Built for civil engineers, site managers, and construction planners, it combines automated engineering checks with real-time logistical calculations to eliminate bottlenecks on the job site.</p>
+          </div>
+		 
+        </article>
+
+        <!-- Project 2 -->
+        <article class="card">
+          <img src="images/SiteCALC+.jpg" alt="Screenshot of the SiteCALC+ web app" loading="lazy">
+          <div class="body">
+			<a href="sitecalc/index.html">
+            <h3>SiteCALC+</h3>
+			</a>
+            <p>SiteCALC+ is an all-in-one digital calculation suite built specifically for civil engineers, land surveyors, architects, and construction professionals. Designed to streamline complex computations from the field to the office, it eliminates the friction of switching between multiple tools by consolidating essential engineering functions into a single, intuitive interface.</p>
+          </div>
+        </article>
+
+        <!-- Project 3 -->
+        <article class="card">
+          <img src="images/Sitelevel.jpg" alt="Screenshot of the SiteLEVEL web app" loading="lazy">
+          <div class="body">
+		  <a href="sitelevel/index.html">
+            <h3>SiteLEVEL</h3>
+			</a>
+            <p>SiteLevel streamlines on-site elevation verification by automating Height of Instrument (HI) calculations and tolerance checks for dumpy level readings. Featuring an intuitive visual vial indicator, instant required-staff-reading calculations, and built-in CSV export, it gives site engineers fast, error-free level verification right from their browser.</p>
+          </div>
+        </article>
+
+      </div>
+    </div>
+  </main>
+
+  <!-- ===== Footer ===== -->
+  <footer>
+    <p>&copy; 2026 Sunday Amos Salami. Built with HTML, CSS and JavaScript.</p>
+  </footer>
+
+  <!-- Shared JavaScript: menu toggle, form validation, planner logic -->
+  <script src="js/script.js"></script>
+</body>
+</html>

@@ -1,0 +1,83 @@
+<!DOCTYPE html>
+<!-- Page: Contact | Part of Sunday Amos Salami's student portfolio -->
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <!-- Makes the layout scale correctly on phones -->
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Contact | Sunday Amos Salami</title>
+  <meta name="description" content="Student portfolio and academic planner of Sunday Amos Salami.">
+  <!-- Google Fonts: speeds up font loading, then loads the two font families -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:wght@500;700&family=Source+Serif+4:wght@400;600&display=swap" rel="stylesheet">
+  <!-- Site-wide stylesheet -->
+  <link rel="stylesheet" href="css/style.css">
+</head>
+<body>
+  <!-- ===== Site header and navigation (same on every page) ===== -->
+  <header>
+    <div class="wrap">
+      <a class="brand" href="index.html">Sunday Amos Salami</a>
+      <!-- Mobile menu toggle; behaviour is in js/script.js -->
+      <button id="menu-btn" aria-label="Toggle menu" aria-expanded="false">Menu</button>
+      <nav aria-label="Main">
+        <ul id="nav-list">
+          <li><a href="index.html">Home</a></li>
+          <li><a href="about.html">About</a></li>
+          <li><a href="projects.html">Projects</a></li>
+          <li><a href="planner.html">Planner</a></li>
+          <li><a href="contact.html" class="active" aria-current="page">Contact</a></li>
+        </ul>
+      </nav>
+    </div>
+  </header>
+
+  <!-- ===== Main page content ===== -->
+  <main>
+    <div class="wrap">
+      <h1>Contact me</h1>
+      <p class="lead">Send me a message and I'll reply within two days.</p>
+      <br>
+
+      <!-- Contact form: novalidate turns off browser pop-ups so js/script.js can show custom errors.
+           Each .err div below receives the error text for the field named in data-for. -->
+      <form id="contact-form" novalidate>
+        <label for="name">Name</label>
+        <input id="name" name="name" type="text" autocomplete="name">
+        <div class="err" data-for="name"></div>
+
+        <label for="email">Email address</label>
+        <input id="email" name="email" type="email" autocomplete="email">
+        <div class="err" data-for="email"></div>
+
+        <label for="phone">Phone number</label>
+        <!-- inputmode="tel" (was "numeric") so users can still type "+" for country codes -->
+        <input id="phone" name="phone" type="tel" inputmode="tel" autocomplete="tel">
+        <div class="err" data-for="phone"></div>
+
+        <label for="message">Message</label>
+        <textarea id="message" name="message" rows="5"></textarea>
+        <div class="err" data-for="message"></div>
+
+        <button class="btn" type="submit">Send message</button>
+        <!-- Success message shown after a valid submit; role="status" announces it to screen readers -->
+		
+		<!-- Social buttons -->
+<a class="btn btn-linkedin" href="https://www.linkedin.com/in/SUNDAY-SALAMI" target="_blank" rel="noopener noreferrer">LinkedIn</a>
+<a class="btn btn-whatsapp" href="https://wa.me/message/IJBRNTI3IL3IF1" target="_blank" rel="noopener noreferrer">WhatsApp</a>
+
+        <div class="msg" id="form-ok" role="status"></div>
+      </form>
+    </div>
+  </main>
+
+  <!-- ===== Footer ===== -->
+  <footer>
+    <p>&copy; 2026 Sunday Amos Salami. Built with HTML, CSS and JavaScript.</p>
+  </footer>
+
+  <!-- Shared JavaScript: menu toggle, form validation, planner logic -->
+  <script src="js/script.js"></script>
+</body>
+</html>

@@ -1,0 +1,255 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>SITECALC+ – Land Measurement and Engineering Calculator</title>
+<link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Sans:wght@400;500;600;700&family=IBM+Plex+Mono:wght@500&display=swap" rel="stylesheet">
+<style>
+:root{--bg:#eef1f4;--sf:#fff;--ink:#14263a;--mu:#5a6a7a;--ln:#ccd4dc;--ac:#e8590c;--acl:#fff;--fn:#dfe6ec;--ok:#1f7a4d;--wn:#b4441a;box-sizing:border-box;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}
+@media (prefers-color-scheme:dark){:root:not([data-theme="light"]){--bg:#0e1a27;--sf:#16263a;--ink:#e6edf3;--mu:#92a4b5;--ln:#2e4258;--fn:#223850;--ok:#5fc28a;--wn:#f0955a}}
+:root[data-theme="dark"]{--bg:#0e1a27;--sf:#16263a;--ink:#e6edf3;--mu:#92a4b5;--ln:#2e4258;--fn:#223850;--ok:#5fc28a;--wn:#f0955a}
+*{box-sizing:border-box}
+html{scroll-padding-top:env(safe-area-inset-top,0px)}
+body{margin:0;background:var(--bg);color:var(--ink);font:16px/1.5 "IBM Plex Sans",system-ui,-apple-system,"Segoe UI",sans-serif}
+header{padding:18px 20px 0;max-width:1000px;margin:auto}
+h1{font-size:26px;margin:0;font-weight:700;letter-spacing:-.3px}
+header p{margin:2px 0 12px;color:var(--mu)}
+nav{display:flex;gap:6px;overflow-x:auto;border-bottom:2px solid var(--ln)}
+nav button{font:600 15px inherit;font-family:inherit;border:0;background:none;color:var(--mu);padding:10px 14px;cursor:pointer;border-bottom:4px solid transparent;margin-bottom:-2px;white-space:nowrap}
+nav button[aria-selected="true"]{color:var(--ink);border-bottom-color:var(--ac)}
+button:focus-visible,input:focus-visible,select:focus-visible,textarea:focus-visible{outline:3px solid var(--ac);outline-offset:2px}
+main{max-width:1000px;margin:auto;padding:18px 20px 30px}
+section{display:none}section.on{display:block}
+.g2{display:grid;grid-template-columns:minmax(0,340px) minmax(0,1fr);gap:18px}
+@media(max-width:760px){.g2{grid-template-columns:1fr}}
+.pn{background:var(--sf);border:1px solid var(--ln);border-radius:8px;padding:16px}
+h2{font-size:18px;margin:0 0 10px}
+label{display:block;font-size:13px;color:var(--mu);margin:10px 0 2px}
+input,select,textarea{width:100%;font:inherit;padding:8px 10px;border:1px solid var(--ln);border-radius:6px;background:var(--bg);color:var(--ink)}
+textarea{font-family:"IBM Plex Mono",ui-monospace,monospace;font-size:14px}
+.row{display:grid;grid-template-columns:1fr 1fr;gap:10px}
+.kp{display:grid;grid-template-columns:repeat(auto-fit,minmax(140px,1fr));gap:10px;margin-bottom:14px}
+.k{background:var(--bg);border-radius:6px;padding:8px 12px;border-top:3px solid var(--ac)}
+.k b{display:block;font:500 20px "IBM Plex Mono",ui-monospace,monospace;overflow-wrap:anywhere}
+.k span{font-size:13px;color:var(--mu)}
+table{width:100%;border-collapse:collapse;font-size:15px}
+td,th{padding:6px 8px;border-bottom:1px solid var(--ln);text-align:left}
+td:last-child,th:last-child{text-align:right;font-family:"IBM Plex Mono",ui-monospace,monospace;font-size:14px}
+th{color:var(--mu);font-weight:600}
+.sc{overflow-x:auto}
+.err{border-left:4px solid var(--wn);padding:8px 12px;background:var(--bg);color:var(--wn)}
+.note{font-size:13px;color:var(--mu);margin:10px 0 0}
+.calc{max-width:420px;margin:auto}
+#c_in{font:500 26px "IBM Plex Mono",ui-monospace,monospace;text-align:right;padding:12px}
+#c_pv{min-height:30px;text-align:right;font:500 18px "IBM Plex Mono",ui-monospace,monospace;color:var(--mu);padding:4px 6px}
+.kb{display:grid;grid-template-columns:repeat(5,1fr);gap:7px;margin-top:8px}
+.kb button{font:600 16px inherit;font-family:inherit;padding:12px 0;border:0;border-radius:8px;background:var(--fn);color:var(--ink);cursor:pointer}
+.kb button.n{background:var(--sf);border:1px solid var(--ln)}
+.kb button.o{background:var(--ink);color:var(--bg)}
+.kb button.e{grid-column:1/-1;background:var(--ac);color:var(--acl);font-size:20px}
+.kb button:active{transform:scale(.97)}
+#c_h div{padding:6px 0;border-bottom:1px solid var(--ln);cursor:pointer;font-family:"IBM Plex Mono",ui-monospace,monospace;font-size:14px}
+#c_h small{display:block;color:var(--mu)}
+</style>
+</head>
+<body>
+<header>
+<h1>SITECALC+</h1>
+<p>Scientific calculator, land and plane measurement, solids and unit conversion for field and office.</p>
+<nav id="tabs" role="tablist">
+<button role="tab" data-t="calc" aria-selected="true">Calculator</button>
+<button role="tab" data-t="land" aria-selected="false">Land and plane areas</button>
+<button role="tab" data-t="sol" aria-selected="false">Solids and volume</button>
+<button role="tab" data-t="cv" aria-selected="false">Unit converter</button>
+<button role="tab" data-t="ref" aria-selected="false">Reference</button>
+</nav>
+</header>
+<main>
+
+<section id="calc" class="on"><div class="g2">
+<div class="pn calc" style="width:100%">
+<input id="c_in" inputmode="none" autocomplete="off" aria-label="Expression" placeholder="0">
+<div id="c_pv" aria-live="polite"></div>
+<div class="kb" id="kb"></div>
+</div>
+<div class="pn"><h2>History</h2><div id="c_h"><p class="note">Results appear here. Select one to reuse it.</p></div></div>
+</div></section>
+
+<section id="land"><div class="g2">
+<div class="pn" id="l_p"></div><div class="pn"><h2>Results</h2><div id="l_r"></div></div>
+</div></section>
+
+<section id="sol"><div class="g2">
+<div class="pn" id="s_p"></div><div class="pn"><h2>Results</h2><div id="s_r"></div></div>
+</div></section>
+
+<section id="cv"><div class="g2">
+<div class="pn"><h2>Convert</h2>
+<label>Quantity</label><select id="v_c"></select>
+<div class="row"><div><label>Value</label><input id="v_v" type="number" value="1" step="any"></div>
+<div><label>From</label><select id="v_u"></select></div></div></div>
+<div class="pn"><h2>All units</h2><div class="sc"><table id="v_t"></table></div></div>
+</div></section>
+
+<section id="ref"><div class="g2">
+<div class="pn"><h2>Reinforcement bars</h2><div class="sc"><table id="r_b"></table></div>
+<p class="note">Mass uses d² ÷ 162.2 kg/m. Check against the mill certificate of the bars you buy.</p></div>
+<div class="pn"><h2>Typical unit weights</h2><div class="sc"><table id="r_w"></table></div>
+<p class="note">Typical design values. Use the figures in your project specification where they differ.</p>
+<h2 style="margin-top:18px">Survey and land constants</h2><div class="sc"><table id="r_c"></table></div></div>
+</div></section>
+</main>
+
+<script>
+const $=id=>document.getElementById(id);
+const fmt=x=>{if(!isFinite(x))return '–';if(x===0)return '0';const a=Math.abs(x);if(a>=1e12||a<1e-5)return x.toExponential(4);return Number(x.toPrecision(9)).toLocaleString('en-US',{maximumFractionDigits:8})};
+const P=Math.PI;
+const CAT={
+Length:{m:1,km:1e3,cm:.01,mm:.001,in:.0254,ft:.3048,yd:.9144,mi:1609.344,'nautical mile':1852,chain:20.1168,link:.201168,rod:5.0292},
+Area:{'m²':1,'km²':1e6,ha:1e4,are:100,'cm²':1e-4,'mm²':1e-6,'ft²':.09290304,'in²':6.4516e-4,'yd²':.83612736,acre:4046.8564224,rood:1011.7141056,'mi²':2589988.110336},
+Volume:{'m³':1,L:.001,mL:1e-6,'ft³':.028316846592,'in³':1.6387064e-5,'yd³':.764554857984,'US gal':.003785411784,'imp gal':.00454609,'oil barrel':.158987294928},
+Angle:{'degree':1,radian:180/P,gradian:.9,arcminute:1/60,arcsecond:1/3600,turn:360},
+Mass:{kg:1,g:.001,tonne:1e3,lb:.45359237,oz:.028349523125,'short ton':907.18474,'long ton':1016.0469088,stone:6.35029318},
+Force:{N:1,kN:1e3,MN:1e6,kgf:9.80665,lbf:4.4482216152605,kip:4448.2216152605,'tonne-force':9806.65},
+Pressure:{Pa:1,kPa:1e3,MPa:1e6,bar:1e5,psi:6894.757293168,ksi:6894757.293168,'kgf/cm²':98066.5,atm:101325},
+Energy:{J:1,kJ:1e3,MJ:1e6,kWh:3.6e6,cal:4.184,kcal:4184,BTU:1055.05585262,'ft·lbf':1.3558179483314},
+Power:{W:1,kW:1e3,MW:1e6,hp:745.69987158,'PS':735.49875,'BTU/h':.29307107},
+Speed:{'m/s':1,'km/h':1/3.6,mph:.44704,knot:1852/3600,'ft/s':.3048},
+Density:{'kg/m³':1,'g/cm³':1e3,'lb/ft³':16.01846337,'lb/in³':27679.9047},
+Time:{s:1,min:60,h:3600,day:86400,week:604800},
+Temperature:null};
+const TMP={'°C':[v=>v,v=>v],K:[v=>v-273.15,v=>v+273.15],'°F':[v=>(v-32)*5/9,v=>v*9/5+32],'°R':[v=>(v-491.67)*5/9,v=>v*9/5+491.67]};
+const opts=(o,sel)=>Object.keys(o).map(k=>`<option${k===sel?' selected':''}>${k}</option>`).join('');
+const rows=a=>'<table>'+a.map(r=>`<tr><td>${r[0]}</td><td>${r[1]}</td></tr>`).join('')+'</table>';
+const kp=a=>'<div class="kp">'+a.map(([v,l])=>`<div class="k"><b>${v}</b><span>${l}</span></div>`).join('')+'</div>';
+
+/* ---------- Scientific calculator ---------- */
+let deg=true,mem=0,ans=0,fresh=false,hist=[];
+function calc(src){
+ let s=src.replace(/×/g,'*').replace(/÷/g,'/').replace(/−/g,'-').replace(/π/g,'pi').replace(/√/g,'sqrt').replace(/\s+/g,'').toLowerCase().replace(/ans/g,'#');
+ s+=')'.repeat(Math.max(0,(s.match(/\(/g)||[]).length-(s.match(/\)/g)||[]).length));
+ let i=0;const fail=()=>{throw new Error('Check the expression')};
+ const z=r=>Math.abs(r)<1e-14?0:r,tr=x=>deg?x*P/180:x,fr=x=>deg?x*180/P:x;
+ const fact=x=>{if(x<0||x!==Math.floor(x)||x>170)fail();let r=1;for(let k=2;k<=x;k++)r*=k;return r};
+ const F={sin:x=>z(Math.sin(tr(x))),cos:x=>z(Math.cos(tr(x))),tan:x=>z(Math.tan(tr(x))),asin:x=>fr(Math.asin(x)),acos:x=>fr(Math.acos(x)),atan:x=>fr(Math.atan(x)),sinh:Math.sinh,cosh:Math.cosh,tanh:Math.tanh,ln:Math.log,log:Math.log10,sqrt:Math.sqrt,cbrt:Math.cbrt,abs:Math.abs,exp:Math.exp,fact};
+ const pk=()=>s[i];
+ const num=()=>{const m=/^(\d+\.?\d*|\.\d+)(e[+-]?\d+)?/.exec(s.slice(i));if(!m)fail();i+=m[0].length;return parseFloat(m[0])};
+ function prim(){const c=pk();
+  if(c==='('){i++;const v=ex();if(pk()!==')')fail();i++;return v}
+  if(c==='#'){i++;return ans}
+  if(c&&/[a-z]/.test(c)){const m=/^[a-z]+/.exec(s.slice(i))[0];i+=m.length;if(m==='pi')return P;if(m==='e')return Math.E;
+   if(!F[m]||pk()!=='(')fail();i++;const v=ex();if(pk()!==')')fail();i++;return F[m](v)}
+  return num()}
+ function post(){let v=prim();while(pk()==='!'||pk()==='%'){v=pk()==='!'?fact(v):v/100;i++}return v}
+ function pw(){const b=post();if(pk()==='^'){i++;return Math.pow(b,un())}return b}
+ function un(){if(pk()==='-'){i++;return -un()}if(pk()==='+'){i++;return un()}return pw()}
+ function term(){let v=un();for(;;){const c=pk();if(c==='*'){i++;v*=un()}else if(c==='/'){i++;v/=un()}else if(c&&/[(a-z#]/.test(c))v*=un();else return v}}
+ function ex(){let v=term();for(;;){const c=pk();if(c==='+'){i++;v+=term()}else if(c==='-'){i++;v-=term()}else return v}}
+ const v=ex();if(i<s.length)fail();if(!isFinite(v))throw new Error('Math error');return parseFloat(v.toPrecision(12));
+}
+const KB=[['DEG','m'],['(','n'],[')','n'],['C','m'],['⌫','m'],
+['sin','f','sin('],['cos','f','cos('],['tan','f','tan('],['ln','f','ln('],['log','f','log('],
+['sin⁻¹','f','asin('],['cos⁻¹','f','acos('],['tan⁻¹','f','atan('],['√','f','√('],['x²','f','^2'],
+['7','n'],['8','n'],['9','n'],['÷','o'],['xʸ','f','^'],
+['4','n'],['5','n'],['6','n'],['×','o'],['π','f','π'],
+['1','n'],['2','n'],['3','n'],['−','o'],['e','f','e'],
+['0','n'],['.','n'],['%','f','%'],['+','o'],['Ans','f','Ans'],
+['MC','m'],['MR','m'],['M+','m'],['M−','m'],['n!','f','!'],
+['=','e']];
+const ci=$('c_in');
+function ins(t){if(fresh&&/^[\d.π(a-z√e]/i.test(t)&&t!=='^'&&t!=='^2'&&t!=='!'&&t!=='%')ci.value='';fresh=false;
+ const a=ci.selectionStart??ci.value.length,b=ci.selectionEnd??a;ci.setRangeText(t,a,b,'end');preview()}
+function preview(){const v=ci.value.trim();if(!v){$('c_pv').textContent='';return}try{$('c_pv').textContent='= '+fmt(calc(v))}catch(e){$('c_pv').textContent=''}}
+function equals(){const v=ci.value.trim();if(!v)return;try{const r=calc(v);hist.unshift([v,r]);ans=r;ci.value=String(r);fresh=true;$('c_pv').textContent='';renderHist()}catch(e){$('c_pv').textContent=e.message}}
+function renderHist(){$('c_h').innerHTML=hist.slice(0,30).map(([e,r],k)=>`<div data-k="${k}"><small>${e}</small>${fmt(r)}</div>`).join('')}
+function key(l,t){
+ if(l==='DEG'){deg=!deg;document.querySelector('[data-l="DEG"]').textContent=deg?'DEG':'RAD';preview()}
+ else if(l==='C'){ci.value='';$('c_pv').textContent='';fresh=false}
+ else if(l==='⌫'){ci.value=ci.value.slice(0,-1);preview()}
+ else if(l==='='){equals()}
+ else if(l==='MC'){mem=0}else if(l==='MR'){ins(String(mem))}
+ else if(l==='M+'||l==='M−'){try{const v=calc(ci.value||String(ans));mem+=l==='M+'?v:-v}catch(e){}}
+ else ins(t||l)}
+$('kb').innerHTML=KB.map(([l,c,t])=>`<button class="${c}" data-l="${l}" data-t="${t||''}">${l}</button>`).join('');
+$('kb').onclick=e=>{const b=e.target.closest('button');if(b)key(b.dataset.l,b.dataset.t)};
+ci.addEventListener('input',()=>{fresh=false;preview()});
+ci.addEventListener('keydown',e=>{if(e.key==='Enter'){e.preventDefault();equals()}});
+$('c_h').onclick=e=>{const d=e.target.closest('div[data-k]');if(d){ci.value=String(hist[d.dataset.k][1]);fresh=true;preview()}};
+
+/* ---------- Shape tools ---------- */
+const pairs=t=>t.split(/[\n;]+/).map(l=>l.trim().split(/[\s,]+/).map(parseFloat)).filter(r=>r.length>=2&&r.every(isFinite));
+const PL={
+rect:{n:'Rectangle or square',f:[['a','Length',40],['b','Width',25]],c:v=>({A:v.a*v.b,L:2*(v.a+v.b)})},
+tri:{n:'Triangle (base and height)',f:[['b','Base',30],['h','Height',20]],c:v=>({A:v.b*v.h/2})},
+tri3:{n:'Triangle (three sides)',f:[['a','Side a',30],['b','Side b',40],['c','Side c',50]],c:v=>{const s=(v.a+v.b+v.c)/2,q=s*(s-v.a)*(s-v.b)*(s-v.c);return q>0?{A:Math.sqrt(q),L:2*s}:{err:'These three sides cannot form a triangle.'}}},
+trap:{n:'Trapezoid',f:[['a','Parallel side a',30],['b','Parallel side b',20],['h','Height',15]],c:v=>({A:(v.a+v.b)/2*v.h})},
+par:{n:'Parallelogram',f:[['b','Base',30],['h','Height',12],['s','Slanted side',14]],c:v=>({A:v.b*v.h,L:2*(v.b+v.s)})},
+circ:{n:'Circle',f:[['r','Radius',10]],c:v=>({A:P*v.r*v.r,L:2*P*v.r})},
+sec:{n:'Circular sector',f:[['r','Radius',10],['t','Angle (degrees)',90]],c:v=>({A:v.r*v.r*v.t*P/360,L:2*v.r+v.r*v.t*P/180})},
+ell:{n:'Ellipse',f:[['a','Semi-axis a',12],['b','Semi-axis b',8]],c:v=>({A:P*v.a*v.b,L:P*(3*(v.a+v.b)-Math.sqrt((3*v.a+v.b)*(v.a+3*v.b)))})},
+poly:{n:'Plot from coordinates',f:[['p','Corner coordinates, one "x, y" pair per line, in order around the plot',"0, 0\n40, 0\n40, 25\n20, 35\n0, 25",'ta']],c:v=>{const p=pairs(v.p);if(p.length<3)return{err:'Enter at least three corners as x, y pairs.'};
+ let a=0,l=0,cx=0,cy=0;p.forEach((q,i)=>{const r=p[(i+1)%p.length],k=q[0]*r[1]-r[0]*q[1];a+=k;cx+=(q[0]+r[0])*k;cy+=(q[1]+r[1])*k;l+=Math.hypot(r[0]-q[0],r[1]-q[1])});
+ a/=2;return{A:Math.abs(a),L:l,x:a?[['Centroid x',fmt(cx/(6*a))],['Centroid y',fmt(cy/(6*a))],['Corners',p.length]]:[]}}},
+off:{n:'Irregular boundary (offsets)',f:[['p','Chainage and offset, one pair per line, along a baseline',"0, 4.2\n10, 5.1\n20, 6.0\n30, 4.8\n40, 3.9",'ta']],c:v=>{const p=pairs(v.p);if(p.length<2)return{err:'Enter at least two chainage, offset pairs.'};
+ let t=0;for(let i=0;i<p.length-1;i++)t+=(p[i][1]+p[i+1][1])/2*(p[i+1][0]-p[i][0]);
+ const h=p[1][0]-p[0][0],n=p.length,eq=p.every((q,i)=>i===0||Math.abs(q[0]-p[i-1][0]-h)<1e-9*Math.max(1,Math.abs(h)));
+ if(n>=3&&n%2===1&&eq){let s=p[0][1]+p[n-1][1];for(let i=1;i<n-1;i++)s+=(i%2?4:2)*p[i][1];const sm=Math.abs(h/3*s);return{A:sm,x:[['Trapezoidal rule',fmt(Math.abs(t))],['Simpson’s rule (used)',fmt(sm)]]}}
+ return{A:Math.abs(t),x:[['Method','Trapezoidal rule']]}}}};
+const SO={
+box:{n:'Cuboid',f:[['l','Length',5],['w','Width',3],['h','Height',2]],c:v=>({V:v.l*v.w*v.h,S:2*(v.l*v.w+v.l*v.h+v.w*v.h)})},
+cyl:{n:'Cylinder',f:[['r','Radius',1],['h','Height',3]],c:v=>({V:P*v.r*v.r*v.h,S:2*P*v.r*(v.r+v.h)})},
+hol:{n:'Hollow cylinder or pipe',f:[['R','Outer radius',0.3],['r','Inner radius',0.25],['h','Length',6]],c:v=>v.r>=v.R?{err:'Inner radius must be smaller than outer radius.'}:{V:P*v.h*(v.R*v.R-v.r*v.r),S:2*P*(v.R+v.r)*v.h+2*P*(v.R*v.R-v.r*v.r)}},
+cone:{n:'Cone',f:[['r','Radius',2],['h','Height',3]],c:v=>({V:P*v.r*v.r*v.h/3,S:P*v.r*(v.r+Math.hypot(v.r,v.h))})},
+sph:{n:'Sphere',f:[['r','Radius',1.5]],c:v=>({V:4/3*P*v.r**3,S:4*P*v.r*v.r})},
+fru:{n:'Conical frustum',f:[['a','Bottom radius',2],['b','Top radius',1],['h','Height',3]],c:v=>({V:P*v.h/3*(v.a*v.a+v.a*v.b+v.b*v.b),S:P*(v.a*v.a+v.b*v.b)+P*(v.a+v.b)*Math.hypot(v.h,v.a-v.b)})},
+tre:{n:'Trench or channel (earthworks)',f:[['b','Bottom width',1.2],['d','Depth',2],['z','Side slope (horizontal per 1 vertical)',0.5],['L','Length',30]],c:v=>({V:(v.b+v.z*v.d)*v.d*v.L})}};
+const DEN={'None':0,'Plain concrete':2400,'Reinforced concrete':2500,'Structural steel':7850,'Water':1000,'Loose dry soil':1600,'Brick masonry':1900,'Softwood timber':500};
+const LU=['m','ft','yd','km','cm','mm','in','mi','chain','link','rod'];
+function mount(pid,rid,S,solid){
+ const p=$(pid),r=$(rid);let cur=Object.keys(S)[0];
+ p.innerHTML=`<h2>${solid?'Solid shape':'Plane shape'}</h2><select id="${pid}s">${Object.keys(S).map(k=>`<option value="${k}">${S[k].n}</option>`).join('')}</select>
+ <label>Unit for lengths</label><select id="${pid}u">${opts(Object.fromEntries(LU.map(u=>[u,1])),'m')}</select><div id="${pid}f"></div>
+ ${solid?`<label>Material (optional, for mass)</label><select id="${pid}m">${Object.keys(DEN).map(k=>`<option>${k}</option>`).join('')}</select><label>Density (kg/m³)</label><input id="${pid}d" type="number" value="0" step="any">`:''}`;
+ const fields=()=>{$(pid+'f').innerHTML=S[cur].f.map(([id,l,d,t])=>`<label>${l}</label>`+(t==='ta'?`<textarea id="${pid}_${id}" rows="7">${d}</textarea>`:`<input id="${pid}_${id}" type="number" step="any" value="${d}" min="0">`)).join('');run()};
+ function run(){
+  const v={};S[cur].f.forEach(([id,,,t])=>v[id]=t==='ta'?$(`${pid}_${id}`).value:parseFloat($(`${pid}_${id}`).value)||0);
+  const o=S[cur].c(v),f=CAT.Length[$(pid+'u').value],un=$(pid+'u').value;
+  if(o.err){r.innerHTML=`<div class="err">${o.err}</div>`;return}
+  let h='';
+  if(!solid){const m2=o.A*f*f;
+   h=kp([[fmt(o.A)+' '+un+'²','Area in your unit'],[fmt(m2/1e4)+' ha','Hectares'],[fmt(m2/CAT.Area.acre)+' acre','Acres']]);
+   if(o.L!=null)h+=rows([['Perimeter',fmt(o.L)+' '+un],['Perimeter in metres',fmt(o.L*f)+' m']]);
+   if(o.x)h+=rows(o.x);
+   h+='<h2 style="margin-top:16px">Area in every unit</h2>'+rows(Object.entries(CAT.Area).map(([k,q])=>[k,fmt(m2/q)]));
+   h+='<h2 style="margin-top:16px">Plots that fit</h2>'+rows([['50 × 100 ft plots',fmt(m2/(50*100*.09290304))],['60 × 120 ft plots',fmt(m2/(60*120*.09290304))],['600 m² plots',fmt(m2/600)]])+'<p class="note">Counts ignore roads, setbacks and boundary shapes.</p>';
+  }else{const m3=o.V*f**3,den=parseFloat($(pid+'d').value)||0;
+   h=kp([[fmt(m3)+' m³','Volume'],[o.S!=null?fmt(o.S*f*f)+' m²':'–','Surface area']]);
+   if(den>0)h+=kp([[fmt(m3*den)+' kg','Mass'],[fmt(m3*den*9.80665/1000)+' kN','Weight']]);
+   h+=rows(Object.entries(CAT.Volume).map(([k,q])=>[k,fmt(m3/q)]));}
+  r.innerHTML=h}
+ $(pid+'s').onchange=e=>{cur=e.target.value;fields()};$(pid+'u').onchange=run;
+ if(solid)$(pid+'m').onchange=e=>{$(pid+'d').value=DEN[e.target.value];run()};
+ p.addEventListener('input',run);fields()}
+mount('l_p','l_r',PL,false);mount('s_p','s_r',SO,true);
+
+/* ---------- Converter ---------- */
+$('v_c').innerHTML=Object.keys(CAT).map(k=>`<option>${k}</option>`).join('');
+function cvUnits(){const c=$('v_c').value;$('v_u').innerHTML=c==='Temperature'?opts(TMP):opts(CAT[c]);cv()}
+function cv(){const c=$('v_c').value,x=parseFloat($('v_v').value),u=$('v_u').value;if(!isFinite(x)){$('v_t').innerHTML='';return}
+ let a;if(c==='Temperature'){const b=TMP[u][0](x);a=Object.keys(TMP).map(k=>[k,fmt(TMP[k][1](b))])}
+ else{const b=x*CAT[c][u];a=Object.entries(CAT[c]).map(([k,q])=>[k,fmt(b/q)])}
+ $('v_t').innerHTML=a.map(r=>`<tr><td>${r[0]}</td><td>${r[1]}</td></tr>`).join('')}
+$('v_c').onchange=cvUnits;$('v_u').onchange=cv;$('v_v').oninput=cv;cvUnits();
+
+/* ---------- Reference ---------- */
+$('r_b').innerHTML='<tr><th>Diameter</th><th>Area (mm²)</th><th>kg/m</th></tr>'+[6,8,10,12,16,20,25,32,40].map(d=>`<tr><td>Y${d}</td><td>${fmt(P*d*d/4)}</td><td>${(d*d/162.2).toFixed(3)}</td></tr>`).join('');
+$('r_w').innerHTML=rows([['Plain concrete','24 kN/m³'],['Reinforced concrete','25 kN/m³'],['Structural steel','78.5 kN/m³'],['Brick masonry','19 kN/m³'],['Loose dry soil','16 kN/m³'],['Water','9.81 kN/m³'],['Softwood timber','5 kN/m³']]);
+$('r_c').innerHTML=rows([['1 hectare','10,000 m²'],['1 acre','4,046.86 m²'],['1 chain','20.1168 m (66 ft, 100 links)'],['1 square mile','640 acres'],['1 kgf','9.80665 N'],['1 MPa','1 N/mm² = 145.04 psi'],['1 ft','0.3048 m exactly']]);
+
+$('tabs').onclick=e=>{const t=e.target.dataset.t;if(!t)return;
+ document.querySelectorAll('nav button').forEach(b=>b.setAttribute('aria-selected',b.dataset.t===t));
+ document.querySelectorAll('section').forEach(s=>s.classList.toggle('on',s.id===t))};
+</script>
+</body>
+</html>

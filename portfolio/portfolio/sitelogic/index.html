@@ -1,0 +1,208 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>SiteLogic – Smart Construction Toolkit</title>
+<link href="https://fonts.googleapis.com/css2?family=Barlow+Condensed:wght@600;700&family=Barlow:wght@400;500;600&display=swap" rel="stylesheet">
+<style>
+:root{--bg:#e8eaec;--sf:#f6f7f8;--ink:#1d252c;--mu:#5d6a74;--ln:#c5cbd1;--ac:#f2b705;--acink:#1d252c;--ok:#2f7d4f;--wn:#b4541a;--bar:#3b4a57;--bar2:#8fa0ad;box-sizing:border-box;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}
+@media (prefers-color-scheme:dark){:root:not([data-theme="light"]){--bg:#161b20;--sf:#1f262d;--ink:#e8ecef;--mu:#95a3ae;--ln:#37424b;--ok:#5fc28a;--wn:#f0955a;--bar:#9fb2c0;--bar2:#4a5a67}}
+:root[data-theme="dark"]{--bg:#161b20;--sf:#1f262d;--ink:#e8ecef;--mu:#95a3ae;--ln:#37424b;--ok:#5fc28a;--wn:#f0955a;--bar:#9fb2c0;--bar2:#4a5a67}
+*{box-sizing:border-box}
+html{scroll-padding-top:env(safe-area-inset-top,0px)}
+body{margin:0;background:var(--bg);color:var(--ink);font:16px/1.5 Barlow,system-ui,-apple-system,"Segoe UI",sans-serif}
+header{background:var(--ink);color:var(--bg);padding:20px 20px 0}
+header .in{max-width:1080px;margin:auto}
+h1{font:700 34px/1 "Barlow Condensed","Arial Narrow",sans-serif;margin:0 0 4px;letter-spacing:.5px}
+header p{margin:0 0 14px;color:#aab6bf;max-width:60ch}
+nav{display:flex;gap:2px;overflow-x:auto}
+nav button{font:600 16px Barlow,sans-serif;border:0;padding:10px 18px;background:#33404a;color:#d5dce1;cursor:pointer;border-radius:6px 6px 0 0;white-space:nowrap}
+nav button[aria-selected="true"]{background:var(--ac);color:var(--acink)}
+nav button:focus-visible,input:focus-visible,select:focus-visible,textarea:focus-visible,.btn:focus-visible{outline:3px solid var(--ac);outline-offset:2px}
+main{max-width:1080px;margin:auto;padding:20px}
+section{display:none}section.on{display:grid;grid-template-columns:minmax(0,320px) minmax(0,1fr);gap:20px}
+@media(max-width:780px){section.on{grid-template-columns:1fr}}
+.pn{background:var(--sf);border:1px solid var(--ln);border-radius:4px;padding:16px}
+h2{font:700 22px "Barlow Condensed","Arial Narrow",sans-serif;margin:0 0 10px}
+label{display:block;font-size:14px;color:var(--mu);margin:10px 0 2px}
+input,select,textarea{width:100%;font:500 16px Barlow,sans-serif;padding:8px 10px;border:1px solid var(--ln);border-radius:4px;background:var(--bg);color:var(--ink)}
+.row{display:grid;grid-template-columns:1fr 1fr;gap:10px}
+.kpis{display:grid;grid-template-columns:repeat(auto-fit,minmax(130px,1fr));gap:10px;margin-bottom:16px}
+.k{border-left:5px solid var(--ac);padding:4px 10px;background:var(--bg)}
+.k b{display:block;font:700 28px/1.1 "Barlow Condensed","Arial Narrow",sans-serif}
+.k span{font-size:13px;color:var(--mu)}
+.flag{padding:8px 12px;border-radius:4px;margin:8px 0;font-size:15px;border:1px solid var(--ln);border-left:5px solid var(--ok)}
+.flag.w{border-left-color:var(--wn)}
+table{width:100%;border-collapse:collapse;font-size:15px}
+th,td{text-align:left;padding:6px 8px;border-bottom:1px solid var(--ln)}
+th{font-weight:600;color:var(--mu)}
+.sc{overflow-x:auto}
+.lane{position:relative;height:22px;margin:4px 0;background:var(--bg);border:1px solid var(--ln)}
+.lane i{position:absolute;top:2px;bottom:2px;background:var(--bar);border-radius:2px}
+.lane em{position:absolute;left:-54px;font-style:normal;font-size:12px;color:var(--mu);top:2px}
+.tl{margin-left:56px;margin-right:4px}
+.stk{display:flex;height:20px;margin:4px 0;border:1px solid var(--ln);background:var(--bg)}
+.stk i{background:var(--bar);border-right:2px solid var(--sf);font:normal 11px/18px Barlow,sans-serif;color:var(--bg);overflow:hidden;text-align:center}
+.stk i:nth-child(even){background:var(--bar2)}
+.stk u{background:repeating-linear-gradient(45deg,var(--wn) 0 3px,transparent 3px 7px);flex:1;opacity:.7}
+.btn{font:600 15px Barlow,sans-serif;padding:9px 16px;border:0;border-radius:4px;background:var(--ac);color:var(--acink);cursor:pointer;margin-top:12px}
+.ck{display:flex;gap:10px;align-items:flex-start;padding:8px 0;border-bottom:1px solid var(--ln)}
+.ck input{width:20px;margin-top:3px}
+.ck small{display:block;color:var(--mu)}
+.note{font-size:13px;color:var(--mu);margin-top:12px}
+</style>
+</head>
+<body>
+<header><div class="in">
+<h1>SiteLogic</h1>
+<p>Calculation tools and automated checks for site logistics, structural planning and material optimisation.</p>
+<nav role="tablist" id="tabs">
+<button role="tab" data-t="log" aria-selected="true">Site logistics</button>
+<button role="tab" data-t="str" aria-selected="false">Structural planning</button>
+<button role="tab" data-t="mat" aria-selected="false">Material optimiser</button>
+<button role="tab" data-t="wf" aria-selected="false">Workflow</button>
+</nav></div></header>
+<main>
+
+<section id="log" class="on">
+<div class="pn"><h2>Concrete pour inputs</h2>
+<label>Pour volume (m³)</label><input id="l_v" type="number" value="48" min="1">
+<div class="row"><div><label>Truck capacity (m³)</label><input id="l_c" type="number" value="6"></div>
+<div><label>Round trip (min)</label><input id="l_r" type="number" value="75"></div></div>
+<div class="row"><div><label>Pump rate (m³/h)</label><input id="l_p" type="number" value="30"></div>
+<div><label>Wastage (%)</label><input id="l_w" type="number" value="5"></div></div>
+<label>First truck on site</label><input id="l_s" type="time" value="07:00">
+</div>
+<div class="pn"><h2>Delivery plan</h2><div class="kpis" id="l_k"></div><div id="l_f"></div>
+<div class="tl" id="l_t"></div>
+<p class="note">Each bar is one truck discharging. Trucks are staggered so the pump never waits. Round trip includes batching, haul, discharge and return.</p></div>
+</section>
+
+<section id="str">
+<div class="pn"><h2>Simply supported RC beam</h2>
+<div class="row"><div><label>Span (m)</label><input id="s_L" type="number" value="6" step=".1"></div>
+<div><label>Width b (mm)</label><input id="s_b" type="number" value="230"></div></div>
+<div class="row"><div><label>Depth h (mm)</label><input id="s_h" type="number" value="450"></div>
+<div><label>Cover (mm)</label><input id="s_c" type="number" value="30"></div></div>
+<div class="row"><div><label>Dead load (kN/m)</label><input id="s_g" type="number" value="18"></div>
+<div><label>Live load (kN/m)</label><input id="s_q" type="number" value="8"></div></div>
+<div class="row"><div><label>fcu (N/mm²)</label><input id="s_f" type="number" value="30"></div>
+<div><label>fy (N/mm²)</label><input id="s_y" type="number" value="460"></div></div>
+<p class="note">Preliminary sizing using BS 8110 style factors (1.4 G + 1.6 Q). Final design must be checked and signed by a registered structural engineer.</p></div>
+<div class="pn"><h2>Flexure, shear and bar options</h2><div class="kpis" id="s_k"></div><div id="s_f2"></div>
+<div class="sc"><table id="s_t"></table></div></div>
+</section>
+
+<section id="mat">
+<div class="pn"><h2>Rebar cutting list</h2>
+<label>Stock bar length (m)</label><input id="m_s" type="number" value="12" step=".1">
+<label>Bar diameter (mm)</label><input id="m_d" type="number" value="16">
+<label>Cuts, one per line: length in m, quantity</label>
+<textarea id="m_l" rows="8">3.2, 12
+4.5, 8
+2.1, 20
+5.8, 6
+1.6, 30</textarea></div>
+<div class="pn"><h2>Optimised cutting plan</h2><div class="kpis" id="m_k"></div><div id="m_f"></div><div id="m_p"></div>
+<p class="note">First-fit decreasing packing. Hatched area is offcut waste.</p></div>
+</section>
+
+<section id="wf">
+<div class="pn" style="grid-column:1/-1"><h2>Auto-generated site workflow</h2>
+<p class="note" style="margin-top:0">Tasks and warnings are created from the results in the other three tools. Change any input and this list updates.</p>
+<div id="w_l"></div>
+<button class="btn" id="w_c">Copy checklist</button> <span id="w_m" class="note"></span>
+<textarea id="w_t" rows="1" style="display:none"></textarea></div>
+</section>
+</main>
+
+<script>
+const $=id=>document.getElementById(id),n=id=>parseFloat($(id).value)||0,R={};
+const f=(x,d=1)=>Number(x).toFixed(d);
+const kp=(a)=>a.map(([v,l])=>`<div class="k"><b>${v}</b><span>${l}</span></div>`).join('');
+const fl=(t,w)=>`<div class="flag${w?' w':''}">${t}</div>`;
+const hm=m=>{m=Math.round(m);return String(Math.floor(m/60)%24).padStart(2,'0')+':'+String(m%60).padStart(2,'0')};
+
+function logistics(){
+ const v=n('l_v'),c=Math.max(n('l_c'),.1),r=n('l_r'),p=Math.max(n('l_p'),.1),w=n('l_w');
+ const order=v*(1+w/100),loads=Math.ceil(order/c),gap=c/p*60,trucks=Math.max(1,Math.ceil(r/gap)),hrs=order/p;
+ const [sh,sm]=($('l_s').value||'07:00').split(':').map(Number),st=sh*60+sm;
+ Object.assign(R,{order,loads,trucks,hrs,r,fin:st+(loads-1)*gap+gap,v});
+ $('l_k').innerHTML=kp([[f(order)+' m³','Order quantity'],[loads,'Truck loads'],[trucks,'Trucks in rotation'],[f(hrs)+' h','Pour duration'],[hm(R.fin),'Pour complete']]);
+ let h='';
+ h+=fl(`Send one truck every ${f(gap,0)} minutes to keep the pump working continuously.`);
+ if(r>90)h+=fl('Round trip is over 90 minutes. Ask the supplier for a retarder admixture to protect workability.',1);
+ if(hrs>8)h+=fl('Pour runs longer than 8 hours. Plan a construction joint or a second shift.',1);
+ $('l_f').innerHTML=h;
+ const lanes=Math.min(trucks,12),tot=Math.min(loads,60)*gap+gap;let t='';
+ for(let i=0;i<lanes;i++){t+=`<div class="lane"><em>Truck ${i+1}</em>`;
+  for(let k=i;k<Math.min(loads,60);k+=trucks)t+=`<i title="Load ${k+1} at ${hm(st+k*gap)}" style="left:${k*gap/tot*100}%;width:${gap/tot*100}%"></i>`;
+  t+='</div>'}
+ $('l_t').innerHTML=t||'';
+}
+
+function structure(){
+ const L=n('s_L'),b=n('s_b'),h=n('s_h'),cv=n('s_c'),g=n('s_g'),q=n('s_q'),fcu=n('s_f'),fy=n('s_y');
+ const w=1.4*g+1.6*q,M=w*L*L/8,V=w*L/2,d=h-cv-8-10;
+ const K=M*1e6/(b*d*d*fcu),Kp=.156,ok=K<=Kp;
+ const z=Math.min(d*(.5+Math.sqrt(Math.max(.25-K/.9,0))),.95*d);
+ const As=M*1e6/(.95*fy*z),Amin=.0013*b*h,Areq=Math.max(As,Amin);
+ const vs=V*1e3/(b*d),vmax=Math.min(.8*Math.sqrt(fcu),5);
+ const ld=L*1000/d,ldLim=20;
+ const opts=[12,16,20,25].map(D=>{const a=Math.PI*D*D/4,k=Math.max(2,Math.ceil(Areq/a));const need=2*(cv+8)+k*D+(k-1)*Math.max(D,25);return{D,k,pr:k*a,fit:need<=b}});
+ Object.assign(R,{K,ok,vs,vmax,ld,ldLim,Areq,M});
+ $('s_k').innerHTML=kp([[f(w)+' kN/m','Ultimate load'],[f(M)+' kNm','Design moment'],[f(V)+' kN','Design shear'],[f(Areq,0)+' mm²','Steel required']]);
+ let t='';
+ t+=ok?fl(`Singly reinforced section works (K = ${f(K,3)}, limit 0.156).`):fl(`K = ${f(K,3)} exceeds 0.156. Increase the section or add compression steel.`,1);
+ t+=vs<=vmax?fl(`Shear stress ${f(vs,2)} N/mm² is within the ${f(vmax,2)} limit.`):fl(`Shear stress ${f(vs,2)} N/mm² exceeds the ${f(vmax,2)} limit. Enlarge the section.`,1);
+ t+=ld<=ldLim?fl(`Span/depth ratio ${f(ld,1)} is within the basic limit of ${ldLim}.`):fl(`Span/depth ratio ${f(ld,1)} is above the basic ${ldLim}. Check deflection or deepen the beam.`,1);
+ $('s_f2').innerHTML=t;
+ $('s_t').innerHTML='<tr><th>Bars</th><th>Provided (mm²)</th><th>One-layer fit</th></tr>'+opts.map(o=>`<tr><td>${o.k}Y${o.D}</td><td>${f(o.pr,0)}</td><td>${o.fit?'Fits':'Needs two layers'}</td></tr>`).join('');
+}
+
+function materials(){
+ const S=n('m_s'),D=n('m_d');let cuts=[];
+ $('m_l').value.split('\n').forEach(x=>{const [a,b]=x.split(',').map(parseFloat);if(a>0&&b>0)for(let i=0;i<b;i++)cuts.push(a)});
+ const bad=cuts.filter(c=>c>S).length;cuts=cuts.filter(c=>c<=S).sort((a,b)=>b-a);
+ const bars=[];
+ cuts.forEach(c=>{let t=bars.find(x=>x.left>=c-1e-9);if(!t){t={cuts:[],left:S};bars.push(t)}t.cuts.push(c);t.left-=c});
+ const use=cuts.reduce((a,b)=>a+b,0),tot=bars.length*S,waste=tot?(tot-use)/tot*100:0,naive=cuts.length;
+ const wt=D*D/162,kg=tot*wt;
+ Object.assign(R,{bars:bars.length,waste,naive,kg});
+ $('m_k').innerHTML=kp([[bars.length,'Stock bars needed'],[f(waste)+'%','Waste'],[naive-bars.length,'Bars saved vs one-cut-per-bar'],[f(kg,0)+' kg','Steel to order']]);
+ $('m_f').innerHTML=(bad?fl(`${bad} cut(s) are longer than the stock bar and were skipped.`,1):'')+(waste>8?fl('Waste is above 8%. Try a different stock length or combine cuts across elements.',1):fl('Waste is within a healthy range.'));
+ $('m_p').innerHTML=bars.slice(0,40).map((b,i)=>`<div class="stk" title="Bar ${i+1}">${b.cuts.map(c=>`<i style="width:${c/S*100}%">${f(c,2)}</i>`).join('')}<u></u></div>`).join('')+(bars.length>40?`<p class="note">Showing the first 40 of ${bars.length} bars.</p>`:'');
+}
+
+const tasks=()=>{
+ const a=[];
+ a.push([`Order ${f(R.order)} m³ of concrete in ${R.loads} loads`,`Confirm ${R.trucks} trucks in rotation and a start time of ${$('l_s').value}.`]);
+ a.push([`Cast ${Math.ceil(R.v/25)} sets of test cubes and run a slump test on each truck`,'Planning assumption of one set per 25 m³. Follow your project specification if it differs.']);
+ if(R.r>90)a.push(['Request retarder admixture from the supplier','Round trip exceeds 90 minutes.',1]);
+ if(R.trucks>6)a.push(['Assign a traffic marshal and a truck holding area','More than 6 trucks are in rotation.',1]);
+ if(R.hrs>8)a.push(['Plan a construction joint or second shift','Pour duration exceeds 8 hours.',1]);
+ a.push([`Provide ${f(R.Areq,0)} mm² of tension steel in the beam`,'See the bar options in Structural planning.']);
+ if(!R.ok)a.push(['Revise the beam section before detailing','Section is over-stressed in bending.',1]);
+ if(R.vs>R.vmax)a.push(['Enlarge the beam to reduce shear stress','Shear stress exceeds the limit.',1]);
+ if(R.ld>R.ldLim)a.push(['Run a full deflection check','Span/depth ratio is above the basic limit.',1]);
+ a.push([`Order ${f(R.kg,0)} kg of rebar as ${R.bars} stock bars`,`Cutting plan wastes ${f(R.waste)}%.`]);
+ if(R.waste>8)a.push(['Re-run the optimiser with another stock length','Waste is above 8%.',1]);
+ return a;
+};
+function workflow(){
+ const t=tasks();
+ $('w_l').innerHTML=t.map(([a,b,w],i)=>`<label class="ck" style="color:var(--ink);font-size:16px;margin:0"><input type="checkbox"><span>${a}${w?' <b style="color:var(--wn)">(flag)</b>':''}<small>${b}</small></span></label>`).join('');
+ $('w_t').value=t.map(([a,b])=>`[ ] ${a} - ${b}`).join('\n');
+}
+function all(){logistics();structure();materials();workflow()}
+document.querySelectorAll('input,textarea').forEach(e=>{if(e.type!=='checkbox')e.addEventListener('input',all)});
+$('tabs').addEventListener('click',e=>{const t=e.target.dataset.t;if(!t)return;
+ document.querySelectorAll('nav button').forEach(b=>b.setAttribute('aria-selected',b.dataset.t===t));
+ document.querySelectorAll('section').forEach(s=>s.classList.toggle('on',s.id===t))});
+$('w_c').onclick=async()=>{let ok=false;try{await navigator.clipboard.writeText($('w_t').value);ok=true}catch(e){}
+ if(!ok){$('w_t').style.display='block';$('w_t').rows=8;$('w_t').select();$('w_m').textContent='Select and copy the text below.'}else $('w_m').textContent='Copied.'};
+all();
+</script>
+</body>
+</html>
